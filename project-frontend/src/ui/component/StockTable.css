@@ -1,0 +1,90 @@
+.stock-table-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+.tables {
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.table-container {
+  flex: 1;
+  margin: 10px;
+  background-color: #444;
+  color: #fff;
+  overflow: hidden;
+}
+
+.table-container h3 {
+  margin: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  border: 1px solid #555;
+  padding: 8px;
+  text-align: left;
+}
+
+tbody {
+  display: block;
+  max-height: 200px;
+  /* Adjust height as needed */
+  overflow-y: auto;
+}
+
+table thead,
+table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.brokers {
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.broker-list {
+  flex: 1;
+  margin: 10px;
+  background-color: #444;
+  color: #fff;
+  padding: 10px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+.header-right,
+.stock-summary,
+.stock-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
