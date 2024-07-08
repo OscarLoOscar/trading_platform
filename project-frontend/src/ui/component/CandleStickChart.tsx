@@ -3,9 +3,9 @@ import HighchartsReact from 'highcharts-react-official';
 import HighchartsStock from 'highcharts/modules/stock';
 import AnnotationsModule from 'highcharts/modules/annotations';
 import StockToolsModule from 'highcharts/modules/stock-tools';
-import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
-import { StockData } from './StockData';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Button, CircularProgress, Typography } from '@mui/material';
+import { StockData } from './StockData';  // Ensure this import is correct
 
 // Initialize Highcharts modules
 HighchartsStock(Highcharts);
@@ -21,7 +21,6 @@ const CandleStickChart: React.FC<CandleStickChartProps> = ({ symbol }) => {
   const [period, setPeriod] = useState('5m');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [options, setOptions] = useState<Highcharts.Options>(getInitialChartOptions());
 
   const cache = useMemo(() => new Map<string, StockData[]>(), []);
@@ -39,7 +38,6 @@ const CandleStickChart: React.FC<CandleStickChartProps> = ({ symbol }) => {
 
     try {
       const response = await fetch(`http://localhost:8085/ema/timeframe?symbol=${symbol}&period=${period}`);
-      console.log(response);
       if (!response.ok) throw new Error('Network response was not ok');
 
       const data: StockData[] = await response.json();
@@ -54,23 +52,25 @@ const CandleStickChart: React.FC<CandleStickChartProps> = ({ symbol }) => {
   }, [symbol, period, cache]);
 
   const updateChartData = (data: StockData[]) => {
-    const formattedData = data.map((item) => {
-      const date = new Date(item.time); // Parse the time string to a Date object
-      return [
-        date.getTime(), // Get the timestamp in milliseconds
-        item.open,
-        item.high,
-        item.low,
-        item.close
-      ];
-    });
+    const formattedData = data.map(item => [
+      new Date(item.time).getTime(),  // Convert time to timestamp
+      item.open,
+      item.high,
+      item.low,
+      item.close
+    ]);
 
     setOptions(prevOptions => ({
       ...prevOptions,
       title: { text: `Chart for ${symbol}` },
       series: [{
-        ...prevOptions.series?.[0],
+        type: 'candlestick',
+        name: symbol,
         data: formattedData,
+        color: 'red',
+        lineColor: 'red',
+        upColor: 'green',
+        upLineColor: 'green'
       }] as Highcharts.SeriesOptionsType[]
     }));
   };
@@ -85,7 +85,7 @@ const CandleStickChart: React.FC<CandleStickChartProps> = ({ symbol }) => {
 
   return (
     <div>
-      <div className="time-buttons">
+      <div className="time-buttons" style={{ marginBottom: '10px' }}>
         {['5m', '15m', '30m', '1h', '4h', 'd', 'w'].map((timeInterval) => (
           <Button
             key={timeInterval}
@@ -99,14 +99,26 @@ const CandleStickChart: React.FC<CandleStickChartProps> = ({ symbol }) => {
           </Button>
         ))}
       </div>
-      <HighchartsReact
-        highcharts={Highcharts}
-        constructorType={'stockChart'}
-        options={options}
-        ref={chartComponentRef}
-      />
-      {isLoading && <CircularProgress />}
-      {error && <Typography color="error">{error}</Typography>}
+      <div style={{ position: 'relative', height: '400px' }}>
+        {isLoading && (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            <CircularProgress />
+          </div>
+        )}
+        {error && (
+          <Typography color="error" style={{ textAlign: 'center' }}>
+            {error}
+          </Typography>
+        )}
+        {!isLoading && !error && (
+          <HighchartsReact
+            highcharts={Highcharts}
+            constructorType={'stockChart'}
+            options={options}
+            ref={chartComponentRef}
+          />
+        )}
+      </div>
     </div>
   );
 };
@@ -126,7 +138,6 @@ function getInitialChartOptions(): Highcharts.Options {
         month: '%Y-%m',
         year: '%Y'
       },
-      // minRange: 60 * 1000 // one minute
     },
     yAxis: {
       startOnTick: false,
@@ -135,7 +146,7 @@ function getInitialChartOptions(): Highcharts.Options {
       maxPadding: 0.2,
       labels: {
         formatter: function () {
-          return Number(this.value).toFixed(2); 
+          return Number(this.value).toFixed(2);
         }
       }
     },

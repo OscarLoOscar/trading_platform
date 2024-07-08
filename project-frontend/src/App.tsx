@@ -1,21 +1,10 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { AppBar, Box, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import CandleStickChart from './ui/component/CandleStickChart';
-import Sidebar from './ui/component/Sidebar';
-import StockTable from './ui/component/StockTable';
-
+import React from 'react';
+import Dashboard from './ui/component/Dashboard';
 const App: React.FC = () => {
-  const [selectedSymbol, setSelectedSymbol] = useState<string>('');
-
-  const handleSelectStock = (symbol: string) => {
-    setSelectedSymbol(symbol);
-  };
 
   return (
     <div>
-      <AppBar position="static" sx={{ backgroundColor: '#959595', height: '50px', display: 'flex', justifyContent: 'center' }}>
+      {/* <AppBar position="static" sx={{ backgroundColor: '#959595', height: '50px', display: 'flex', justifyContent: 'center' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           <Typography variant="h6" sx={{ textAlign: 'center' }}>
             Stock Trading Dashboard
@@ -33,14 +22,12 @@ const App: React.FC = () => {
       </AppBar>
       <Container maxWidth="xl" style={{ marginTop: '20px', maxHeight: '80%' }}>
         <Grid container spacing={3}>
-          {/* Sidebar */}
           <Grid item xs={2}>
             <Paper style={{ height: '100%', backgroundColor: '#2c2c2e', color: '#ffffff' }}>
               <Typography variant="h6" style={{ padding: '20px' }}>Stocks List</Typography>
               <Sidebar onSelectStock={handleSelectStock} />
             </Paper>
           </Grid>
-          {/* Main Content */}
           <Grid item xs={7}>
             <Paper style={{ height: '100%', backgroundColor: '#2c2c2e', color: '#ffffff' }}>
               <CandleStickChart symbol={selectedSymbol || 'DELL'} />
@@ -69,7 +56,8 @@ const App: React.FC = () => {
             </Paper>
           </Grid>
         </Grid>
-      </Container>
+      </Container> */}
+      <Dashboard/>
     </div>
   );
 }
